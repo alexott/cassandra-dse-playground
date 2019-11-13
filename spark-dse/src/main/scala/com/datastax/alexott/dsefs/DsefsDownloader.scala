@@ -3,19 +3,25 @@ package com.datastax.alexott.dsefs
 import java.io._
 
 import com.datastax.alexott.dsefs.DsefsUploader.getBool
-import org.apache.commons.io.IOUtils
-import org.apache.hadoop.fs.{FSDataInputStream, FSDataOutputStream, FileSystem, Path}
-import org.apache.spark.sql.{SparkSession, _}
+import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
+import org.apache.spark.sql.SparkSession
 
 object DsefsDownloader {
   def main(args: Array[String]): Unit = {
     if (args.length < 2) {
-      println("Usage: DsefsDownloader fileToDownload destination")
+      println("Usage: DsefsDownloader fileOrDirectoryToDownload destination")
       System.exit(1)
     }
     val spark = SparkSession.builder().getOrCreate()
 
     //    import spark.implicits._
+
+    val remoteFS = FileSystem.get(spark.sparkContext.hadoopConfiguration)
+    val path = new Path(args(0))
+    if (!remoteFS.exists(path)) {
+      println("The file or directory '" + args(0) + "' doesn't exist!")
+      System.exit(1)
+    }
 
     val outfile = new File(args(1))
     if (outfile.exists()) {
@@ -27,17 +33,8 @@ object DsefsDownloader {
       }
     }
 
-    val fileSystem = FileSystem.get(spark.sparkContext.hadoopConfiguration)
-    val path = new Path(args(0))
-    if (!fileSystem.isFile(path)) {
-      println("The '" + args(0) + "' is not a file!")
-      System.exit(1)
-    }
-    val in = fileSystem.open(path)
-    val out = new BufferedOutputStream(new FileOutputStream(outfile))
-    IOUtils.copy(in, out)
-    out.close()
-    in.close()
+    FileUtil.copy(remoteFS, path, outfile, false, spark.sparkContext.hadoopConfiguration)
+
     System.exit(0)
   }
 }
