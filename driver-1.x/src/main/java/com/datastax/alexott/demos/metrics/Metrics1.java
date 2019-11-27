@@ -8,8 +8,8 @@ import com.datastax.driver.core.Session;
 public class Metrics1 {
 
     public static void main(String[] args) throws InterruptedException {
-
-        try (Cluster cluster = Cluster.builder().addContactPoint("10.200.175.110").build();
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+        try (Cluster cluster = Cluster.builder().addContactPoint(server).build();
              Session session = cluster.connect()) {
 
             for(int i = 0; i < 3000; i++) {

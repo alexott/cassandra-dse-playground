@@ -10,7 +10,8 @@ public class App {
 
 	public static void main(String[] args) {
 		CodecRegistry codecRegistry = CodecRegistry.DEFAULT_INSTANCE;
-		Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").withCodecRegistry(codecRegistry).build();
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+		Cluster cluster = Cluster.builder().addContactPoint(server).withCodecRegistry(codecRegistry).build();
 		Session session = cluster.connect();
 
 		MappingManager manager = new MappingManager(session);

@@ -12,7 +12,8 @@ import java.util.Set;
 
 public class Test1 {
 	public static void main(String[] args) throws JsonProcessingException {
-		Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+		Cluster cluster = Cluster.builder().addContactPoint(server).build();
 		Session session = cluster.connect();
 
 		ResultSet rs = session.execute("select * from test.ftest ;");

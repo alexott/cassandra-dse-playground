@@ -20,7 +20,8 @@ public class GraphLoad {
 	static final int NUM_ACCOUNTS = 10000;
 
 	public static void main(String[] args) {
-		try (DseCluster dseCluster = DseCluster.builder().addContactPoints("127.0.0.1")
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+		try (DseCluster dseCluster = DseCluster.builder().addContactPoints(server)
 				.withGraphOptions(new GraphOptions().setGraphName("C720")).build();
 				DseSession session = dseCluster.connect()) {
 

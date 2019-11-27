@@ -77,7 +77,8 @@ public class DumpClusterConfig {
     }
 
     public static void main(String[] args) {
-        try (Cluster cluster = Cluster.builder().addContactPoint("192.168.0.10").build();
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+        try (Cluster cluster = Cluster.builder().addContactPoint(server).build();
              Session session = cluster.connect()) {
             dumpConfig(cluster.getConfiguration());
         }

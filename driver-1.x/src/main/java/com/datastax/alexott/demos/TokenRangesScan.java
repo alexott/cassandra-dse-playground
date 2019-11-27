@@ -20,8 +20,9 @@ import java.util.Map;
 
 public class TokenRangesScan {
     public static void main(String[] args) {
+        String server = System.getProperty("contactPoint", "127.0.0.1");
         Cluster cluster = Cluster.builder()
-                .addContactPoint(System.getProperty("contactPoint", "127.0.0.1"))
+                .addContactPoint(server)
                 .build();
         Session session = cluster.connect();
 

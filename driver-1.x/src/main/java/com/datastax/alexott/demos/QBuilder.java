@@ -21,7 +21,8 @@ import static com.datastax.driver.core.querybuilder.QueryBuilder.*;
 public class QBuilder {
 
     public static void main(String[] args) {
-        Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+        Cluster cluster = Cluster.builder().addContactPoint(server).build();
         Session session = cluster.connect();
 
         BuiltStatement selectAll = QueryBuilder.select().all().from("test", "test").limit(10);

@@ -9,7 +9,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Test3 {
 	public static void main(String[] args) throws JsonProcessingException {
-		Cluster cluster = Cluster.builder().addContactPoint("192.168.0.10").withCredentials("user.0", "password").build();
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+		Cluster cluster = Cluster.builder().addContactPoint(server).withCredentials("user.0", "password").build();
 		Session session = cluster.connect();
 
 		PreparedStatement prepared = session.prepare("UPDATE test.st SET cities = cities + ? WHERE zip = ? and state = ?");

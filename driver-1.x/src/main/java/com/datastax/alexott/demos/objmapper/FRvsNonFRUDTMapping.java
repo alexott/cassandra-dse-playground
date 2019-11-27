@@ -13,8 +13,8 @@ import com.datastax.driver.mapping.MappingManager;
 
 public class FRvsNonFRUDTMapping {
     public static void main(String[] args) {
-
-        try(Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+        try(Cluster cluster = Cluster.builder().addContactPoint(server).build();
             Session session = cluster.connect("test")) {
             MappingManager manager = new MappingManager(session);
             Mapper<UDTTestTableNonFR> mapperNonFR = manager.mapper(UDTTestTableNonFR.class);

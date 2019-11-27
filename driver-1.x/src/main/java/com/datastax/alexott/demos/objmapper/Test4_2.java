@@ -11,10 +11,10 @@ import java.util.Random;
 
 public class Test4_2 {
     public static void main(String[] args) throws InterruptedException {
-
+        String server = System.getProperty("contactPoint", "127.0.0.1");
         QueryOptions queryOptions = new QueryOptions().setDefaultIdempotence(true);
         try(Cluster cluster = Cluster.builder().withProtocolVersion(ProtocolVersion.V4)
-                .addContactPoint(System.getProperty("contactPoint", "127.0.0.1"))
+                .addContactPoint(server)
                 .withQueryOptions(queryOptions)
                 // for working with Cassandra 2.1-2.2
                 .withProtocolVersion(ProtocolVersion.V3)

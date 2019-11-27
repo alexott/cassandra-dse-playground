@@ -62,7 +62,8 @@ insert into test.rstest(id, text, date, timestamp, time, uuid, tuuid, m1, m2, l1
 
 public class TestResultSerializer {
 	public static void main(String[] args) throws JsonProcessingException {
-		try (Cluster cluster = Cluster.builder().addContactPoint("10.200.179.102").build();
+        String server = System.getProperty("contactPoint", "127.0.0.1");
+		try (Cluster cluster = Cluster.builder().addContactPoint(server).build();
 		Session session = cluster.connect()) {
 
 			ResultSet rs = session.execute("select json * from test.rstest ;");
