@@ -8,8 +8,8 @@ The code is organized as following:
 
 * `driver-1.x` - samples that use DSE Java driver 1.x (mostly compatible with DataStax
   Java driver 3.x);
-* `driver-2.x` - samples that use DSE Java driver 2.x (mostly compatible with DataStax
-  Java driver 4.x);
+* `driver-4.x` - samples that use DataStax Java driver 2.x (mostly compatible with DSE
+  Java driver 2.x);
 * `spark-dse` - samples that use DSE Analytics (should be mostly compatible with OSS
   Spark, but there are some differences, like, support for DSE Direct Join for data
   frames);
