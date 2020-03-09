@@ -3,7 +3,9 @@ package com.datastax.alexott.demos;
 import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.CodecRegistry;
 import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.ProtocolVersion;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.Statement;
 import com.datastax.driver.core.exceptions.QueryExecutionException;
@@ -14,6 +16,9 @@ import org.apache.ivy.util.StringUtils;
 // create table test.btest (id int, c1 int, t text, primary key (id, c1));
 
 public class TestBatches {
+
+    private static final int MAX_BATCH_SIZE = 2 * 1024 * 1024; // 2Mb
+
     public static void main(String[] args) {
         String server = System.getProperty("contactPoint", "127.0.0.1");
         try(Cluster cluster = Cluster.builder().addContactPoint(server).build();
@@ -60,6 +65,28 @@ public class TestBatches {
                     System.out.println("Got exception for multi-partition batch: " + ex.getMessage());
                 }
             }
+
+            { // unlogged batch into single partition - it shouldn't fail
+                BatchStatement batchStatement = new BatchStatement();
+                ProtocolVersion protocolVersion = cluster.getConfiguration().getProtocolOptions().getProtocolVersion();
+                CodecRegistry codecRegistry = cluster.getConfiguration().getCodecRegistry();
+                int currentBatchSize = 0;
+                for (int j = 0; j < 5000; j++) {
+                    BoundStatement boundStatement = pStmt.bind(j, j, str);
+                    int stmtSize = boundStatement.requestSizeInBytes(protocolVersion, codecRegistry);
+                    if ((currentBatchSize + stmtSize) > MAX_BATCH_SIZE) {
+                        session.execute(batchStatement);
+                        batchStatement = new BatchStatement();
+                        currentBatchSize = 0;
+                    }
+                    batchStatement.add(boundStatement);
+                    currentBatchSize += stmtSize;
+                }
+                if (batchStatement.size() > 0) {
+                    session.execute(batchStatement);
+                }
+            }
+
 
         }
     }
