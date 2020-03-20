@@ -52,10 +52,8 @@ object StructuredStreamingDSE {
     // This works only with Spark 2.2 (if BYOS 6.0.4 is used)
     val query = streamingCountsDF.writeStream
       .outputMode(OutputMode.Update)
-      .format("org.apache.spark.sql.cassandra")
       .option("checkpointLocation", "webhdfs://192.168.0.10:5598/checkpoint")
-      .option("keyspace", "test")
-      .option("table", "sttest")
+      .cassandraFormat("sttest", "test")
       .start()
 
     /* val query = streamingCountsDF.writeStream
