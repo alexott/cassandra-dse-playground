@@ -11,15 +11,15 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.dse.version>2.3.0</java.dse.version>
+    <java.dse.version>4.5.1</java.dse.version>
     <java.version>1.8</java.version>
     <prometheus.version>0.8.0</prometheus.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>com.datastax.dse</groupId>
-      <artifactId>dse-java-driver-core</artifactId>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core</artifactId>
       <version>${java.dse.version}</version>
     </dependency>
     <dependency>
@@ -49,13 +49,6 @@
     </dependency>
   </dependencies>
 
-  <repositories>
-    <repository>
-      <id>DataStax-Repo</id>
-      <url>https://repo.datastax.com/public-repos/</url>
-    </repository>
-  </repositories>
-  
   <build>
     <plugins>
       <plugin>
