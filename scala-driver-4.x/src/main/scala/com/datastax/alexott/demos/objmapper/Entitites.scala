@@ -20,10 +20,10 @@ import scala.annotation.meta.field
 
 
 @Entity
-case class udt(@(CqlName @field)(value = "id") id: java.lang.Integer,
-               @(CqlName @field)(value = "t1") t1: java.lang.Integer,
-               @(CqlName @field)(value = "t2") t2: java.lang.Integer,
-               @(CqlName @field)(value = "a2") a2: java.lang.Integer) {
+case class udt(@(CqlName @field)("id") id: java.lang.Integer,
+               @(CqlName @field)("t1") t1: java.lang.Integer,
+               @(CqlName @field)("t2") t2: java.lang.Integer,
+               @(CqlName @field)("a2") a2: java.lang.Integer) {
   def this() {
     this(0,0,0,0)
   }

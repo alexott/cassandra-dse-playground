@@ -33,6 +33,11 @@
       <artifactId>java-driver-mapper-runtime</artifactId>
       <version>${driver.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.scala-lang.modules</groupId>
+      <artifactId>scala-java8-compat_2.11</artifactId>
+      <version>0.9.0</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -75,6 +80,26 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
+      </plugin>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>4.3.0</version>
+        <executions>
+          <execution>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <scalaVersion>${scala.version}</scalaVersion>
+              <args>
+                <arg>-target:jvm-${java.version}</arg>
+              </args>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
