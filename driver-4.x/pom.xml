@@ -28,6 +28,11 @@
       <artifactId>java-driver-query-builder</artifactId>
       <version>${driver.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-mapper-runtime</artifactId>
+      <version>${driver.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -39,6 +44,13 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <optimize>true</optimize>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.datastax.oss</groupId>
+              <artifactId>java-driver-mapper-processor</artifactId>
+              <version>${driver.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>

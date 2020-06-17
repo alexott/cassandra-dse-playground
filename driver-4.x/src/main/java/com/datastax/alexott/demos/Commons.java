@@ -19,10 +19,16 @@ public class Commons {
     public static final int WAIT_TIME = 500;
     public static final int WAIT_CYCLES = 100;
 
-    public static Collection<InetSocketAddress> getContactPoints() {
-        return Arrays.stream(System.getProperty("contactPoints", "localhost").split(","))
+    public static Collection<InetSocketAddress> getContactPoints(final String contactPoints) {
+        return Arrays.stream(contactPoints.split(","))
                 .map(host -> InetSocketAddress.createUnresolved(host, CQL_PORT))
                 .collect(Collectors.toList());
+
+    }
+
+
+    public static Collection<InetSocketAddress> getContactPoints() {
+        return getContactPoints(System.getProperty("contactPoints", "localhost"));
 
     }
 
