@@ -12,7 +12,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <driver.version>4.7.0</driver.version>
+    <driver.version>4.7.2</driver.version>
     <java.version>1.8</java.version>
     <scala.version>2.11.12</scala.version>
   </properties>
@@ -26,6 +26,11 @@
     <dependency>
       <groupId>com.datastax.oss</groupId>
       <artifactId>java-driver-query-builder</artifactId>
+      <version>${driver.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datastax.oss</groupId>
+      <artifactId>java-driver-core</artifactId>
       <version>${driver.version}</version>
     </dependency>
     <dependency>
