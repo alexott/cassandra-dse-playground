@@ -14,6 +14,10 @@ The code is organized as following:
   Spark, but there are some differences, like, support for DSE Direct Join for data
   frames);
 * `spark-oss` - samples that demonstrate the use of Spark with OSS Spark Cassandra
-  Connector.
+  Connector, version < 2.5.0
+* `scc-2.5` - samples that  demonstrate the use of Spark with OSS Spark Cassandra
+  Connector, version = 2.5.x
+* `scc-3.0` - samples that  demonstrate the use of Spark with OSS Spark Cassandra
+  Connector, version >= 3.0
 
 
