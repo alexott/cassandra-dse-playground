@@ -1,10 +1,7 @@
+This directory contains code that demonstrates joining of data in Cassandra with data in Kafka topic - typical task of enrichment of the streaming data with additional data.  There are 2 versions of the code:
 
-
-The producer code is mostly taken from the [DataStax example](https://github.com/DataStax-Examples/kafka-connector-sink-json), with some modifications specific for this demo:
-
-1. Information about stocks is loaded into a Cassandra table, that will be used in joins
-1. We send only stock ticker, date and price information to Kafka topic
-
+* for Spark Structured Streaming (recommended to use)
+* for Spark Streaming
 
 ## Setup
 
@@ -40,11 +37,18 @@ it will generate uberjar in the `target/cassandra-join-spark-0.0.1-jar-with-depe
 
 ## Produce data (for both use cases)
 
+The producer code is mostly taken from the [DataStax example](https://github.com/DataStax-Examples/kafka-connector-sink-json), with some modifications specific for this demo:
+
+1. Information about stocks is loaded into a Cassandra table, that will be used in joins
+1. We send only stock ticker, date and price information to Kafka topic
+
+Data could be produced using following command (we can specify how many stocks to use, and how many points generate per stock):
+
 ```sh
-KAFKA_HOST=192.168.0.10
+KAFKA_HOST=localhost
 NUMBER_OF_STOCKS=10
 POINTS_PER_STOCK=10
-mvn clean compile exec:java -Dexec.mainClass=json.JsonProducer \
+mvn exec:java -Dexec.mainClass=json.JsonProducer \
    -Dexec.args="$TOPIC_NAME $NUMBER_OF_STOCKS $POINTS_PER_STOCK ${KAFKA_HOST}:9092"
 ```
 
@@ -55,12 +59,11 @@ This Spark structured streaming job (source code is in the file `StockTickersJoi
 ```sh
 bin/spark-submit --class com.datastax.alexott.demos.streaming.StockTickersJoinDataFrames \
   --conf spark.sql.extensions=com.datastax.spark.connector.CassandraSparkExtensions \
-  --conf spark.cassandra.connection.host=192.168.0.10 
+  --conf spark.cassandra.connection.host=localhost \
   cassandra-join-spark-0.0.1-jar-with-dependencies.jar ${KAFKA_HOST}:9092 $TOPIC_NAME
 ```
 
 Please note that we need to pass `--conf spark.sql.extensions=com.datastax.spark.connector.CassandraSparkExtensions` to enable so-called [Direct Join optimization](http://www.russellspitzer.com/2018/05/23/DSEDirectJoin/) that converts join on the primary/partition key, into individual requests, instead of reading all data from Cassandra.  This functionality did exist in DSE Analytics for a long time, and was open sourced in the [Spark Cassandra Connector 2.5.0](https://www.datastax.com/blog/2020/05/advanced-apache-cassandra-analytics-now-open-all).  With this optimization enabled we should see the string `Cassandra Direct Join` in the output of the `.explain`, like here:
-
 
 ```
 == Physical Plan ==
@@ -105,12 +108,11 @@ This job is very similar to the previous, but uses  Spark streaming (source code
 
 ```
 bin/spark-submit --class com.datastax.alexott.demos.streaming.StockTickersJoinRDD \
-  --conf spark.cassandra.connection.host=192.168.0.10 \
+  --conf spark.cassandra.connection.host=localhost \
   target/cassandra-join-spark-0.0.1-jar-with-dependencies.jar ${KAFKA_HOST}:9092 $TOPIC_NAME
 ```
 
 This job first parses JSON from topic, then join parsed data with data in Cassandra (via `leftJoinWithCassandraTable`), and generates an instance of the `JoinedData` case class that contains both data from Kafka topic, and from Cassandra.  Right now, this information is just put onto console, like this:
-
 
 ```
 There are 0 stock tickers without information in Cassandra
