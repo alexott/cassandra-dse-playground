@@ -50,7 +50,7 @@ mvn clean compile exec:java -Dexec.mainClass=json.JsonProducer \
 
 ## Spark Structured Streaming
 
-This streaming job reads the data from Kafka (symbol, price, and timestamp) and performs joins of this data with data in Cassandra table `test.stock_info` to retrieve details about every stock.  The code could be executed as following:
+This Spark structured streaming job (source code is in the file `StockTickersJoinDataFrames`) reads the data from Kafka (symbol, price, and timestamp) and performs joins of this data with data in Cassandra table `test.stock_info` to retrieve details about every stock.  The code could be executed as following:
 
 ```sh
 bin/spark-submit --class com.datastax.alexott.demos.streaming.StockTickersJoinDataFrames \
@@ -99,3 +99,25 @@ And as streaming job will work, we can see that we get stock details together wi
 +------------------+--------------------+------+----------+--------+--------------+--------------------+
 ```
 
+## Spark Streaming
+
+This job is very similar to the previous, but uses  Spark streaming (source code is in the file `StockTickersJoinRDD`). The code could be executed as following:
+
+```
+bin/spark-submit --class com.datastax.alexott.demos.streaming.StockTickersJoinRDD \
+  --conf spark.cassandra.connection.host=192.168.0.10 \
+  target/cassandra-join-spark-0.0.1-jar-with-dependencies.jar ${KAFKA_HOST}:9092 $TOPIC_NAME
+```
+
+This job first parses JSON from topic, then join parsed data with data in Cassandra (via `leftJoinWithCassandraTable`), and generates an instance of the `JoinedData` case class that contains both data from Kafka topic, and from Cassandra.  Right now, this information is just put onto console, like this:
+
+
+```
+There are 0 stock tickers without information in Cassandra
+There are 20 stock tickers with information in Cassandra
+...
+JoinedData(ESND,NASDAQ,ESSENDANT,WHOLESALERS,13.0,2020-07-14T16:19:19.588Z,13.483634952551117)
+JoinedData(SWK,NYSE,STANLEY BLACK & DECKER,HOUSEHOLD PRODUCTS,128.0,2020-07-14T16:19:23.588Z,121.58327281753643)
+JoinedData(BLK,NYSE,BLACKROCK,FINANCIALS,424.0,2020-07-14T16:19:24.588Z,394.7030616365362)
+...
+```

@@ -20,9 +20,7 @@ object StockTickersJoinDataFrames {
     }
     val kafkaServes = args(0)
     val topicName = args(1)
-    val sc = new SparkContext()
     val spark = SparkSession.builder()
-      .config(sc.getConf)
       .getOrCreate()
     import spark.implicits._
 
