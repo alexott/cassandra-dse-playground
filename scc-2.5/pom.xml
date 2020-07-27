@@ -15,7 +15,7 @@
     <scala.version>2.11.12</scala.version>
     <spark.version>2.4.6</spark.version>
     <spark.scala.version>2.11</spark.scala.version>
-    <scc.version>2.5.0</scc.version>
+    <scc.version>2.5.1</scc.version>
     <java.version>1.8</java.version>
   </properties>
 
